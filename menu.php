@@ -4,13 +4,13 @@ require_once 'includes/auth.php';
 $pageTitle = 'Menu';
 
 // Get categories
-$categories = $pdo->query("SELECT * FROM categories ORDER BY id")->fetchAll();
+$categories = $pdo->query("SELECT * FROM categories ORDER BY display_order ASC")->fetchAll();
 
 // Active category
 $catId = isset($_GET['cat']) ? (int)$_GET['cat'] : ($categories[0]['id'] ?? 0);
 
 // Get items for selected category
-$stmt = $pdo->prepare("SELECT * FROM items WHERE category_id = ? ORDER BY id");
+$stmt = $pdo->prepare("SELECT * FROM items WHERE category_id = ? ORDER BY id ASC");
 $stmt->execute([$catId]);
 $items = $stmt->fetchAll();
 
@@ -147,7 +147,7 @@ include 'includes/header.php';
             <div class="item-card">
                 <div class="item-card-img">
                     <?php if($item['image'] && file_exists('uploads/'.$item['image'])): ?>
-                        <img src="/foodbyte/uploads/<?= htmlspecialchars($item['image']) ?>" alt="">
+                        <img src="/~np03cs4a240314/uploads/<?= htmlspecialchars($item['image']) ?>" alt="">
                     <?php else: ?><?php endif; ?>
                 </div>
                 <div class="item-card-body">
@@ -164,7 +164,6 @@ include 'includes/header.php';
         <?php endif; ?>
     </main>
 </div>
-
 
 <style>
 @keyframes flyToCart {
@@ -193,7 +192,6 @@ function addToCart(itemId, btn) {
   const btnRect = btn.getBoundingClientRect();
   const cartLink = document.querySelector('.nav-right a[href*="cart"]');
 
-  // Flying dot
   const dot = document.createElement('div');
   dot.className = 'fly-dot';
   dot.style.left = (btnRect.left + btnRect.width / 2 - 7) + 'px';
@@ -212,15 +210,12 @@ function addToCart(itemId, btn) {
   document.body.appendChild(dot);
   setTimeout(() => dot.remove(), 700);
 
-  // AJAX
-  fetch('/foodbyte/cart.php?add=' + itemId, {
+  fetch('/~np03cs4a240314/cart.php?add=' + itemId, {
     headers: { 'X-Requested-With': 'XMLHttpRequest' }
   })
   .then(r => r.json())
   .then(data => {
     if (!data.success) return;
-
-    // Update or create badge
     let badge = document.querySelector('.cart-badge');
     if (badge) {
       badge.textContent = data.cartCount;
@@ -233,8 +228,6 @@ function addToCart(itemId, btn) {
       b.textContent = data.cartCount;
       cartLink.appendChild(b);
     }
-
-    // Button feedback
     const orig = btn.textContent;
     btn.textContent = '✓ Added';
     btn.style.background = '#2E7D32';
@@ -244,7 +237,7 @@ function addToCart(itemId, btn) {
     }, 1200);
   })
   .catch(() => {
-    window.location.href = '/foodbyte/cart.php?add=' + itemId;
+    window.location.href = '/~np03cs4a240314/cart.php?add=' + itemId;
   });
 }
 </script>
