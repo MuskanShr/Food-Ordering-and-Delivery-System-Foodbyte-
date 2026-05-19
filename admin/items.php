@@ -1,6 +1,7 @@
 <?php
 require_once '../includes/db.php';
 require_once '../includes/auth.php';
+requireAdmin(); 
 
 if (!is_dir('../uploads')) mkdir('../uploads', 0755, true);
 
