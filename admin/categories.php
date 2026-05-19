@@ -1,6 +1,7 @@
 <?php
 require_once '../includes/db.php';
 require_once '../includes/auth.php';
+requireAdmin(); 
 
 // ADD
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
@@ -42,7 +43,7 @@ $stmt = $pdo->query("
     SELECT c.*, COUNT(i.id) as item_count
     FROM categories c
     LEFT JOIN items i ON c.id = i.category_id
-    GROUP BY c.id ORDER BY c.id
+    GROUP BY c.id ORDER BY c.display_order ASC
 ");
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
