@@ -21,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Passwords do not match.";
 
     if (empty($errors)) {
-    // Block reuse of the current password — a "reset" that keeps the
-    // same password defeats the purpose of resetting.
+   
+    // verification for same password
     $stmt = $pdo->prepare("SELECT password FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $oldHash = $stmt->fetchColumn();
